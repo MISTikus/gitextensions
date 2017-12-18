@@ -69,7 +69,8 @@ namespace TfsIntegration
                 && !string.IsNullOrEmpty(_tfsTeamCollectionName)
                 && !string.IsNullOrEmpty(_projectName))
             {
-                _tfsHelper = LoadAssemblyAndConnectToServer("TfsInterop.Vs2015")
+                _tfsHelper = LoadAssemblyAndConnectToServer("TfsInterop.Vs2017")
+                    ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2015")
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2013")
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2012");
 
