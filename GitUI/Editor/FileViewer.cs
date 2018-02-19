@@ -26,6 +26,7 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
+        private readonly IFullPathResolver _fullPathResolver;
 
         public FileViewer()
         {
@@ -61,7 +62,14 @@ namespace GitUI.Editor
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
+            ignoreWhiteSpaces.Image = GitUI.Properties.Resources.ignore_whitespaces;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
+            ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
+
+            ignoreAllWhitespaces.Checked = AppSettings.IgnoreAllWhitespaceChanges;
+            ignoreAllWhitespaces.Image = GitUI.Properties.Resources.ignore_all_whitespaces;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
             ShowEntireFile = AppSettings.ShowEntireFile;
             showEntireFileButton.Checked = ShowEntireFile;
@@ -97,6 +105,7 @@ namespace GitUI.Editor
             if (RunTime() && ContextMenuStrip == null)
                 ContextMenuStrip = contextMenu;
             contextMenu.Opening += ContextMenu_Opening;
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
@@ -326,8 +335,15 @@ namespace GitUI.Editor
         {
             var diffArguments = new StringBuilder();
 
-            if (IgnoreWhitespaceChanges)
-                diffArguments.Append(" --ignore-space-change");
+            if (ignoreAllWhitespaces.Checked)
+            {
+                diffArguments.Append(" --ignore-all-space");
+            }
+            else
+            {
+                if (IgnoreWhitespaceChanges)
+                    diffArguments.Append(" --ignore-space-change");
+            }
 
             if (ShowEntireFile)
                 diffArguments.AppendFormat(" --inter-hunk-context=9000 --unified=9000");
@@ -468,12 +484,14 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            if (guid == GitRevision.UnstagedGuid) //working directory changes
+            if (guid == GitRevision.UnstagedGuid)
             {
+                //No blob exists for unstaged, present contents from file system
                 ViewFile(fileName);
             }
             else
             {
+                //Retrieve blob, same as GitItemStatus.TreeGuid
                 string blob = Module.GetFileBlobHash(fileName, guid);
                 ViewGitItem(fileName, blob);
             }
@@ -501,7 +519,7 @@ namespace GitUI.Editor
         {
             FilePreamble = null;
 
-            string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
+            string fullPath = Path.GetFullPath(_fullPathResolver.Resolve(fileName));
 
             if (fileName.EndsWith("/") || Directory.Exists(fullPath))
             {
@@ -535,6 +553,7 @@ namespace GitUI.Editor
                                 PictureBox.Image = image;
                             });
             }
+            //Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
                 ViewText(null, "Binary file: " + fileName);
@@ -579,7 +598,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (Stream stream = File.OpenRead(Path.Combine(Module.WorkingDir, fileName)))
+                using (Stream stream = File.OpenRead(_fullPathResolver.Resolve(fileName)))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -615,7 +634,7 @@ namespace GitUI.Editor
             if (File.Exists(fileName))
                 path = fileName;
             else
-                path = Path.Combine(Module.WorkingDir, fileName);
+                path = _fullPathResolver.Resolve(fileName);
 
             if (File.Exists(path))
             {
@@ -1182,6 +1201,15 @@ namespace GitUI.Editor
         private void revertSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             applySelectedLines(GetSelectionPosition(), GetSelectionLength(), reverse: true);
+        }
+
+        private void ignoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newIgnoreValue = !ignoreAllWhitespaces.Checked;
+            ignoreAllWhitespaces.Checked = newIgnoreValue;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Checked = newIgnoreValue;
+            AppSettings.IgnoreAllWhitespaceChanges = newIgnoreValue;
+            OnExtraDiffArgumentsChanged();
         }
     }
 }

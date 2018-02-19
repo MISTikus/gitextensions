@@ -81,6 +81,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Annotations.cs" />
+    <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="CommitDataManager.cs" />
@@ -92,6 +93,13 @@
     <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="EnvironmentPathsProvider.cs" />
     <Compile Include="ExceptionUtils.cs" />
+    <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProvider.cs" />
+    <Compile Include="ExternalLinks\ExternalLinkDefinition.cs" />
+    <Compile Include="ExternalLinks\ExternalLinkFormat.cs" />
+    <Compile Include="ExternalLinks\ExternalLinkRevisionParser.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksLoader.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksManager.cs" />
+    <Compile Include="ExternalLinks\GitRevisionExternalLinksParser.cs" />
     <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="FullPathResolver.cs" />
@@ -109,6 +117,7 @@
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
+    <Compile Include="Repository\RepositoryDescriptionProvider.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
@@ -133,9 +142,7 @@
     <Compile Include="Settings\SettingsContainer.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
-    <Compile Include="GitExtLinks\GitExtLink.cs" />
-    <Compile Include="GitExtLinks\GitExtLinkDef.cs" />
-    <Compile Include="GitExtLinks\GitExtLinksParser.cs" />
+    <Compile Include="ExternalLinks\ExternalLink.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />

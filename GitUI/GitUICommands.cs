@@ -22,7 +22,7 @@ namespace GitUI
     {
         private readonly IAvatarService _gravatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
-
+        private readonly IFullPathResolver _fullPathResolver;
 
         public GitUICommands(GitModule module)
         {
@@ -33,6 +33,7 @@ namespace GitUI
 
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _gravatarService = new GravatarService(avatarCache);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         public GitUICommands(string workingDir)
@@ -336,11 +337,11 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "")
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IEnumerable<string> selectedFiles = null)
         {
             Func<bool> action = () =>
             {
-                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message);
+                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
                 FormProcess.ShowDialog(owner, Module, arguments);
                 return true;
             };
@@ -963,11 +964,11 @@ namespace GitUI
             return StartFormatPatchDialog(null);
         }
 
-        public bool StartStashDialog(IWin32Window owner)
+        public bool StartStashDialog(IWin32Window owner, bool manageStashes = true)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormStash(this))
+                using (var form = new FormStash(this) { ManageStashes = manageStashes })
                     form.ShowDialog(owner);
 
                 return true;
@@ -1034,7 +1035,7 @@ namespace GitUI
             {
                 try
                 {
-                    string path = Path.Combine(Module.WorkingDir, fileName);
+                    string path = _fullPathResolver.Resolve(fileName);
                     if (File.Exists(path))
                         File.Delete(path);
                     else
@@ -1580,12 +1581,21 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
         {
+            return StartPushDialog(owner, pushOnShow, false, out pushCompleted);
+        }
+
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted)
+        {
             bool pushed = false;
 
             Func<bool> action = () =>
             {
                 using (var form = new FormPush(this))
                 {
+                    if (forceWithLease)
+                    {
+                        form.CheckForceWithLease();
+                    }
                     DialogResult dlgResult;
                     if (pushOnShow)
                         dlgResult = form.PushAndShowDialogWhenFailed(owner);
@@ -1996,6 +2006,11 @@ namespace GitUI
                     if (args[1].StartsWith("github-windows://openRepo/"))
                     {
                         StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true, null);
+                        return;
+                    }
+                    if (args[1].StartsWith("github-mac://openRepo/"))
+                    {
+                        StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true, null);
                         return;
                     }
                     break;

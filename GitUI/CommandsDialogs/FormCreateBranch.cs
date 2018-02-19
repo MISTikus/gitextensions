@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Utils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -28,6 +29,8 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
             Translate();
+
+            groupBox1.AutoSize = true;
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)

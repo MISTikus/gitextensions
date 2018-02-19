@@ -254,6 +254,16 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowReflogReferences";
+                menuCommand.Text = "Show reflog references";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowReflogReferences_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowReflogReferences;
+
+                resultList.Add(menuCommand);
+            }
+
             resultList.Add(MenuCommand.CreateSeparator());
 
             {
@@ -353,6 +363,7 @@ namespace GitUI.UserControls.RevisionGridClasses
               var menuCommand = new MenuCommand();
               menuCommand.Name = "showTagsToolStripMenuItem";
               menuCommand.Text = "Show tags";
+              menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowTags);
               menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
               menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
 
@@ -362,7 +373,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             {
               var menuCommand = new MenuCommand();
               menuCommand.Name = "showIdsToolStripMenuItem";
-              menuCommand.Text = "Show SHA1";
+              menuCommand.Text = "Show SHA-1";
               menuCommand.ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null);
               menuCommand.IsCheckedFunc = () => AppSettings.ShowIds;
 

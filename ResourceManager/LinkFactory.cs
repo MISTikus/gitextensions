@@ -6,9 +6,20 @@ using System.Collections.Concurrent;
 
 namespace ResourceManager
 {
-    public class LinkFactory
+    public interface ILinkFactory
     {
-        private ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
+        void Clear();
+        string CreateLink(string caption, string uri);
+        string CreateTagLink(string tag);
+        string CreateBranchLink(string noPrefixBranch);
+        string CreateCommitLink(string guid, string linkText = null, bool preserveGuidInLinkText = false);
+        string ParseLink(string aLinkText);
+    }
+
+    public sealed class LinkFactory : ILinkFactory
+    {
+        private readonly ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
+
 
         public void Clear()
         {
@@ -54,9 +65,14 @@ namespace ResourceManager
                     linkText = Strings.GetCurrentIndex();
                 else
                 {
-                    linkText = preserveGuidInLinkText || guid.Length < 10
-                        ? guid
-                        : guid.Substring(0, 10);
+                    if (preserveGuidInLinkText)
+                    {
+                        linkText = guid;
+                    }
+                    else
+                    {
+                        linkText = GitRevision.ToShortSha(guid);
+                    }
                 }
             }
             return AddLink(linkText, "gitext://gotocommit/" + guid);

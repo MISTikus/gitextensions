@@ -127,6 +127,9 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
     <Compile Include="CommandsDialogs\BuildReportTabPageExtension.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
@@ -246,6 +249,12 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.Designer.cs">
+      <DependentUpon>GitConfigAdvancedSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -388,6 +397,10 @@
     <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.Designer.cs">
+      <DependentUpon>GitStatusMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -591,12 +604,6 @@
     </Compile>
     <Compile Include="FormStatus.Designer.cs">
       <DependentUpon>FormStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormSplash.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormSplash.Designer.cs">
-      <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormBrowse.cs">
       <SubType>Form</SubType>
@@ -1095,12 +1102,6 @@
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.Designer.cs">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-    </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
     <Compile Include="UserControls\FolderBrowserButton.cs">
       <SubType>UserControl</SubType>
@@ -1183,6 +1184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.resx">
+      <DependentUpon>GitConfigAdvancedSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.resx">
       <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
@@ -1562,10 +1566,6 @@
       <DependentUpon>FormSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSplash.resx">
-      <DependentUpon>FormSplash.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormStash.resx">
       <DependentUpon>FormStash.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1615,10 +1615,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ToolStripGitStatus.resx">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
@@ -1914,8 +1910,6 @@
     <Content Include="Resources\Icons\commit_error.png" />
     <Content Include="Resources\Icons\commit_ok.png" />
     <Content Include="Resources\Icons\commit_warning.png" />
-    <Content Include="Resources\Icons\certificate_error.png" />
-    <Content Include="Resources\Icons\certificate_ok.png" />
     <Content Include="Resources\Icons\14.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
@@ -1934,6 +1928,8 @@
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
     <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\eye_closed.png" />
+    <Content Include="Resources\Icons\eye_opened.png" />
     <Content Include="Resources\Icons\gitex.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
@@ -1941,6 +1937,8 @@
     <Content Include="Resources\Icons\HelpPullMerge.png" />
     <Content Include="Resources\Icons\HelpPullRebase.png" />
     <Content Include="Resources\Icons\IconArchiveRevision.png" />
+    <Content Include="Resources\Icons\IconBook.png" />
+    <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
     <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
@@ -1953,9 +1951,9 @@
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
     <Content Include="Resources\Icons\IconUntrackedOnly.png" />
+    <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
+    <Content Include="Resources\Icons\ignore_whitespaces.png" />
     <Content Include="Resources\Icons\increase.png" />
-    <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
-    <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
     <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Resources\Icons\tag_error.png" />
     <Content Include="Resources\Icons\tag_ok.png" />
@@ -2127,20 +2125,4 @@
   <ItemGroup />
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <TextStylePolicy TabWidth="4" IndentWidth="4" RemoveTrailingWhitespace="True" NoTabsAfterNonTabs="False" EolMarker="Native" FileWidth="80" TabsToSpaces="True" scope="text/x-csharp">
-            <inheritsSet />
-            <inheritsScope />
-          </TextStylePolicy>
-          <CSharpFormattingPolicy IndentBlock="True" IndentBraces="False" IndentSwitchCaseSection="True" LabelPositioning="OneLess" NewLinesForBracesInTypes="True" NewLinesForBracesInMethods="True" SpaceWithinMethodDeclarationParenthesis="False" SpaceBetweenEmptyMethodDeclarationParentheses="False" SpaceWithinMethodCallParentheses="False" SpaceBetweenEmptyMethodCallParentheses="False" SpaceAfterControlFlowStatementKeyword="True" SpaceWithinExpressionParentheses="False" SpaceWithinCastParentheses="False" SpaceWithinOtherParentheses="False" SpaceAfterCast="False" SpacesIgnoreAroundVariableDeclaration="False" SpaceBetweenEmptySquareBrackets="False" SpaceWithinSquareBrackets="False" SpaceAfterColonInBaseTypeDeclaration="True" SpaceAfterComma="True" SpaceAfterDot="False" SpaceAfterSemicolonsInForStatement="True" SpaceBeforeColonInBaseTypeDeclaration="True" SpaceBeforeComma="False" SpaceBeforeDot="False" SpaceBeforeSemicolonsInForStatement="False" SpacingAroundBinaryOperator="Single" WrappingPreserveSingleLine="True" WrappingKeepStatementsOnSingleLine="True" PlaceSystemDirectiveFirst="True" IndentSwitchSection="True" NewLinesForBracesInProperties="True" NewLinesForBracesInAccessors="True" NewLinesForBracesInAnonymousMethods="True" NewLinesForBracesInControlBlocks="True" NewLinesForBracesInAnonymousTypes="True" NewLinesForBracesInObjectCollectionArrayInitializers="True" NewLinesForBracesInLambdaExpressionBody="True" NewLineForElse="True" NewLineForCatch="True" NewLineForFinally="True" NewLineForMembersInObjectInit="True" NewLineForMembersInAnonymousTypes="True" NewLineForClausesInQuery="True" SpacingAfterMethodDeclarationName="False" SpaceAfterMethodCallName="False" SpaceBeforeOpenSquareBracket="False" scope="text/x-csharp">
-            <inheritsSet />
-            <inheritsScope />
-          </CSharpFormattingPolicy>
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
 </Project>

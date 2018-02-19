@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.50.02">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.51.RC1">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -52,6 +52,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Check for release candidate versions</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
+        <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
         <target />
@@ -63,6 +67,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen "local changes" action as default action.
 This action will be performed without warning while checking out branch.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="grpCommit.Text">
+        <source>Commit</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1295,12 +1303,20 @@ Do you want to open it?</source>
         <source>Go to line</source>
         <target />
       </trans-unit>
+      <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
+        <source>Ignore all whitespace changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ignoreAllWhitespaces.ToolTipText">
+        <source>Ignore all whitespace changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
-        <source>Ignore whitespaces</source>
+        <source>Ignore leading and trailing whitespace changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore whitespace changes</source>
+        <source>Ignore leading and trailing whitespace changes</source>
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -1974,6 +1990,10 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitButtonText.Text">
+        <source>Commit</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
@@ -2908,6 +2928,18 @@ revision:</source>
         <source>(none: don't checkout after clone)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_errorCloneFailed.Text">
+        <source>Clone Failed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotRooted.Text">
+        <source>Destination folder must be an absolute path.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotSupplied.Text">
+        <source>You need to specify destination folder.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
         <target />
@@ -3263,6 +3295,10 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
         <source>Assume unchanged</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="branchNameLabel.Text">
+        <source>(Branch name)</source>
         <target />
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -3892,8 +3928,11 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>When you delete a branch the commits can get lost because nothing points to them.
-Make sure that commits under remote branch(-es) to be deleted are reachable before proceeding.</source>
+        <source>The commits referenced by the deleted branch will be lost
+if no other branch or tag references them. Make sure there
+is a branch or tag referencing the commits you wish to keep.
+If you have accidentally deleted a wrong branch, go to Commands | Show reflog form
+in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
@@ -4088,6 +4127,10 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowFullHistory.ToolTipText">
+        <source>Show Full History</source>
         <target />
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -4654,7 +4697,7 @@ command "git help shortlog"</source>
         <target />
       </trans-unit>
       <trans-unit id="Sha1.HeaderText">
-        <source>Sha1</source>
+        <source>SHA-1</source>
         <target />
       </trans-unit>
       <trans-unit id="Type.HeaderText">
@@ -4694,7 +4737,7 @@ command "git help shortlog"</source>
         <target />
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn4.HeaderText">
-        <source>Sha1</source>
+        <source>SHA-1</source>
         <target />
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -4983,7 +5026,7 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
         <target />
       </trans-unit>
       <trans-unit id="_formTitleFetch.Text">
-        <source>Fetch ({0}</source>
+        <source>Fetch ({0})</source>
         <target />
       </trans-unit>
       <trans-unit id="_formTitlePull.Text">
@@ -5612,7 +5655,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="Sha.HeaderText">
-        <source>Sha-1</source>
+        <source>SHA-1</source>
         <target />
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchCaptionText.Text">
@@ -5626,7 +5669,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="copySha1ToolStripMenuItem.Text">
-        <source>Copy Sha1</source>
+        <source>Copy SHA-1</source>
         <target />
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
@@ -5643,7 +5686,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="lblDirtyWorkingDirectory.Text">
         <source>Warning: you've got changes in your working directory that could be lost if you want to reset the current branch to another commit.
-Stash them before if you don't want to lost them.</source>
+Stash them before if you don't want to lose them.</source>
         <target />
       </trans-unit>
       <trans-unit id="linkCurrentBranch.Text">
@@ -7175,7 +7218,7 @@ global settings.
         <target />
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes in revision graph</source>
+        <source>Show current working directory changes as an artificial commit</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8061,6 +8104,10 @@ See the changes in the commit form.</source>
         <source>Show filtered branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowReflogReferences.Text">
+        <source>Show reflog references</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">
         <source>Show remote branches</source>
         <target />
@@ -8293,7 +8340,7 @@ If this is a central repository (bare repository without a working directory):
         <target />
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
-        <source>Show SHA1</source>
+        <source>Show SHA-1</source>
         <target />
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">

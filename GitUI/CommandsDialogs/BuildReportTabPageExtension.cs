@@ -30,9 +30,6 @@ namespace GitUI.CommandsDialogs
 
         public void FillBuildReport(GitRevision revision)
         {
-            if (EnvUtils.IsMonoRuntime())
-                return;
-
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
             selectedGitRevision = revision;
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
@@ -55,20 +52,27 @@ namespace GitUI.CommandsDialogs
 
                     if (isFavIconMissing || tabControl.SelectedTab == buildReportTabPage)
                     {
-                        if (revision.BuildStatus.ShowInBuildReportTab)
+                        try
                         {
-                            url = null;
-                            buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
-                        }
-                        else
-                        {
-                            url = revision.BuildStatus.Url;
-                            buildReportWebBrowser.Navigate("about:blank");
-                        }
+                            if (revision.BuildStatus.ShowInBuildReportTab)
+                            {
+                                url = null;
+                                buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                            }
+                            else
+                            {
+                                url = revision.BuildStatus.Url;
+                                buildReportWebBrowser.Navigate("about:blank");
+                            }
 
-                        if (isFavIconMissing)
+                            if (isFavIconMissing)
+                            {
+                                buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                            }
+                        }
+                        catch
                         {
-                            buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                            //No propagation to the user if the report fails
                         }
                     }
 
