@@ -4,17 +4,16 @@ using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using TfsInterop.Interface;
-using System.Text.RegularExpressions;
 
 namespace TfsIntegration
 {
-
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class TfsIntegrationMetadata : BuildServerAdapterMetadataAttribute
@@ -69,7 +68,8 @@ namespace TfsIntegration
                 && !string.IsNullOrEmpty(_tfsTeamCollectionName)
                 && !string.IsNullOrEmpty(_projectName))
             {
-                _tfsHelper = LoadAssemblyAndConnectToServer("TfsInterop.Vs2015")
+                _tfsHelper = LoadAssemblyAndConnectToServer("TfsInterop.Vs2017")
+                    ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2015")
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2013")
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2012");
 
@@ -161,7 +161,7 @@ namespace TfsIntegration
                 Description = buildDetail.Label + " (" + buildDetail.Description + ")",
                 CommitHashList = new[] { sha },
                 Url = buildDetail.Url,
-                ShowInBuildReportTab = false
+                ShowInBuildReportTab = true
             };
 
             return buildInfo;
